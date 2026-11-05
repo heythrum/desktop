@@ -29,7 +29,7 @@ export default {
       return apiResponse(await createConfigResponse({ httpMethod: request.method, headers }, settings));
     }
     if (url.pathname === '/api/search') {
-      return apiResponse(await createSearchResponse({ httpMethod: request.method, headers, queryStringParameters: { q: url.searchParams.get('q') ?? undefined } }, environment.YOUTUBE_API_KEY));
+      return apiResponse(await createSearchResponse({ httpMethod: request.method, headers, queryStringParameters: { q: url.searchParams.get('q') ?? undefined, safeSearch: url.searchParams.get('safeSearch') ?? undefined } }, environment.YOUTUBE_API_KEY));
     }
     if (url.pathname.startsWith('/api/')) {
       return new Response(JSON.stringify({ error: 'API introuvable.' }), { status: 404, headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' } });

@@ -59,6 +59,10 @@ export async function getVideoMetadata(id: string, signal?: AbortSignal): Promis
   }
 }
 
+export function getYouTubeSafeSearch(): 'none' | 'strict' {
+  try { return typeof localStorage !== 'undefined' && localStorage.getItem('thrum.family-filter') === 'true' ? 'strict' : 'none'; } catch { return 'none'; }
+}
+
 /** Server-side key on web deployments; optional personal key for local/desktop. */
 export async function searchYouTube(query: string, key?: string, signal?: AbortSignal): Promise<Track[]> {
   const q = query.trim();
@@ -68,8 +72,8 @@ export async function searchYouTube(query: string, key?: string, signal?: AbortS
   const desktop = typeof window !== 'undefined' && window.location.hostname === '127.0.0.1' && window.location.port === '43197';
   const searchEndpoint = desktop ? 'https://thrum.uno/api/search' : '/api/search';
   const url = direct
-    ? `https://www.googleapis.com/youtube/v3/search?${new URLSearchParams({ part: 'snippet', type: 'video', videoEmbeddable: 'true', maxResults: '24', q, key: key!.trim() })}`
-    : `${searchEndpoint}?${new URLSearchParams({ q })}`;
+    ? `https://www.googleapis.com/youtube/v3/search?${new URLSearchParams({ part: 'snippet', type: 'video', videoEmbeddable: 'true', videoSyndicated: 'true', safeSearch: getYouTubeSafeSearch(), maxResults: '24', q, key: key!.trim() })}`
+    : `${searchEndpoint}?${new URLSearchParams({ q, safeSearch: getYouTubeSafeSearch() })}`;
   try {
     const response = await fetch(url, { signal, headers: { Accept: 'application/json' } });
     const raw: unknown = await response.json().catch(() => null);

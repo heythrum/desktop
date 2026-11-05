@@ -1,8 +1,10 @@
+La version 1.0.2 ajoute la recherche de versions alternatives lors des erreurs YouTube 100/101/150 et un filtre familial facultatif (désactivé par défaut). Un morceau explicite n’est pas nécessairement bloqué ; une restriction d’intégration, d’âge ou de région reste décidée par YouTube. Aucune configuration ne garantit tous les titres. Le choix d’une version alternative demande une clé de recherche disponible et reste explicite pour éviter de lancer une mauvaise version.
+
 # Télécharger et configurer Thrum
 
 Téléchargement public : https://github.com/heythrum/desktop/releases/latest
 
-Dans Assets, choisissez `Thrum-1.0.1-x64-setup.exe` pour installer, ou `Thrum-1.0.1-portable.exe` pour lancer sans installation. Les fichiers sont publiés quand le workflow du tag a terminé avec succès. Une page Releases vide indique que la compilation est encore en cours ou a échoué ; consultez Actions.
+Dans Assets, choisissez `Thrum-1.0.2-x64-setup.exe` pour installer, ou `Thrum-1.0.2-portable.exe` pour lancer sans installation. Les fichiers sont publiés quand le workflow du tag a terminé avec succès. Une page Releases vide indique que la compilation est encore en cours ou a échoué ; consultez Actions.
 
 Au premier lancement Windows, **Configurer Thrum** permet de saisir, tester et enregistrer votre clé YouTube personnelle. Ce panneau reste accessible depuis la barre latérale. Il contient aussi les liens pour installer GitHub Desktop, ouvrir le dépôt, modifier la configuration publique et gérer Cloudflare.
 

@@ -26,7 +26,7 @@ export type PlayerHandle = { seek(seconds: number): void; resume(): void };
 type Props = {
   videoId: string | null; playing: boolean; volume: number;
   onPlaying(playing: boolean): void; onEnded(): void;
-  onProgress(time: number, duration: number): void; onError(message: string): void;
+  onProgress(time: number, duration: number): void; onError(message: string, code?: number): void;
 };
 export const YouTubePlayer = forwardRef<PlayerHandle, Props>(function YouTubePlayer(props, ref) {
   const host = useRef<HTMLDivElement>(null);
@@ -72,8 +72,8 @@ export const YouTubePlayer = forwardRef<PlayerHandle, Props>(function YouTubePla
           },
           onError: ({ data }: { data: number }) => {
             if (canceled) return;
-            const message = data === 100 ? 'Cette vidéo est indisponible ou privée.' : data === 101 || data === 150 ? 'Son auteur ne permet pas la lecture intégrée. Essayez un autre titre.' : data === 153 ? 'YouTube refuse cette origine. Ouvrez Thrum via son serveur local ou en HTTPS.' : 'La lecture YouTube a échoué. Essayez un autre titre.';
-            setProblem(message); latest.current.onPlaying(false); latest.current.onError(message);
+            const message = data === 100 ? 'Cette vidéo est indisponible ou privée.' : data === 101 || data === 150 ? 'Cette vidéo refuse la lecture intégrée. Choisissez une autre version ou ouvrez YouTube.' : data === 153 ? 'YouTube refuse cette origine. Ouvrez Thrum via son serveur local ou en HTTPS.' : 'La lecture YouTube a échoué. Essayez un autre titre.';
+            setProblem(message); latest.current.onPlaying(false); latest.current.onError(message, data);
           },
         },
       });

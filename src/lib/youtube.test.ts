@@ -22,7 +22,7 @@ describe('YouTube search adapter', () => {
     const fetcher = vi.fn().mockResolvedValue(new Response(JSON.stringify({ items: [{ id: '4NRXx6U8ABQ', title: 'One &amp; Two', artist: 'Artist', thumbnail: 'https://evil.com/x' }, { id: 'bad' }] }), { status: 200 }));
     vi.stubGlobal('fetch', fetcher);
     const tracks = await searchYouTube('the weeknd');
-    expect(fetcher.mock.calls[0][0]).toBe('/api/search?q=the+weeknd');
+    expect(fetcher.mock.calls[0][0]).toBe('/api/search?q=the+weeknd&safeSearch=none');
     expect(tracks).toHaveLength(1);
     expect(tracks[0].title).toBe('One & Two');
     expect(tracks[0].thumbnail).toContain('i.ytimg.com');
@@ -36,6 +36,7 @@ describe('YouTube search adapter', () => {
     expect(url.hostname).toBe('www.googleapis.com');
     expect(url.searchParams.get('videoEmbeddable')).toBe('true');
     expect(url.searchParams.get('type')).toBe('video');
+    expect(url.searchParams.get('safeSearch')).toBe('none');
     expect(url.searchParams.get('key')).toBe('personal-key');
     expect(tracks[0].artist).toBe('Artist');
   });
@@ -69,4 +70,11 @@ describe('YouTube search adapter', () => {
     expect(fetcher).not.toHaveBeenCalled();
     await expect(getVideoMetadata('4NRXx6U8ABQ')).resolves.toMatchObject({ title: 'A Song', artist: 'An Artist' });
   });
+});
+
+it('respects the explicit local family-filter preference', async () => {
+  const fetcher=vi.fn(async (_url:string) => new Response(JSON.stringify({items:[]})));
+  vi.stubGlobal('fetch',fetcher);vi.stubGlobal('localStorage',{getItem:()=> 'true'});
+  await searchYouTube('example song','personal-test-key');
+  expect(new URL(fetcher.mock.calls[0][0]).searchParams.get('safeSearch')).toBe('strict');
 });

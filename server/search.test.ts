@@ -74,3 +74,17 @@ describe('YouTube search function', () => {
     expect(response.body).not.toContain('private diagnostic');
   });
 });
+
+it('separates family-filter caches and rejects unsupported filters', async () => {
+  vi.stubEnv('YOUTUBE_API_KEY', 'test-public-search-key');
+  const fetcher=vi.fn(async (_url: string) => new Response(JSON.stringify({items:[]})));
+  vi.stubGlobal('fetch',fetcher);
+  try {
+    await handler(request('separate filter cache example'));
+    await handler({...request(),queryStringParameters:{q:'separate filter cache example',safeSearch:'strict'}});
+    expect(fetcher).toHaveBeenCalledTimes(2);
+    expect(new URL(fetcher.mock.calls[0][0] as string).searchParams.get('safeSearch')).toBe('none');
+    expect(new URL(fetcher.mock.calls[1][0] as string).searchParams.get('safeSearch')).toBe('strict');
+    expect((await handler({...request(),queryStringParameters:{q:'filter test',safeSearch:'other'}})).statusCode).toBe(400);
+  } finally {vi.unstubAllGlobals();vi.unstubAllEnvs();}
+});

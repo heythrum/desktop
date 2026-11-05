@@ -38,16 +38,18 @@ export async function createSearchResponse(event: SearchEvent, serverKey?: strin
   if (query.length < 2 || query.length > 100) {
     return respond(400, { error: 'Saisissez une recherche de 2 à 100 caractères.' });
   }
+  const safeSearch = event.queryStringParameters?.safeSearch ?? 'none';
+  if (!['none', 'strict'].includes(safeSearch)) return respond(400, { error: 'Filtre de recherche invalide.' });
   const key = serverKey?.trim();
   if (!key) return respond(503, { error: 'La recherche nécessite une clé YouTube Data API v3. Ajoutez un lien YouTube ou configurez une clé dans les paramètres.', code: 'API_KEY_MISSING' });
 
-  const cacheKey = query.toLocaleLowerCase('fr');
+  const cacheKey = `${safeSearch}:${query.toLocaleLowerCase('fr')}`;
   const found = cache.get(cacheKey);
   if (found && found.expires > Date.now()) return respond(200, { items: found.items }, true);
 
   const params = new URLSearchParams({
     part: 'snippet', type: 'video', videoEmbeddable: 'true', videoSyndicated: 'true',
-    maxResults: '20', q: query, key, safeSearch: 'moderate',
+    maxResults: '20', q: query, key, safeSearch,
   });
   try {
     const upstream = await fetch(`https://www.googleapis.com/youtube/v3/search?${params}`, {

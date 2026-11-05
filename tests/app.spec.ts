@@ -5,7 +5,7 @@ async function offlineAssets(page: Page) {
   // Network boundaries are mocked; these tests validate UI behavior, not streaming authorization.
   await page.route('https://i.ytimg.com/**', route => route.abort());
   await page.route('https://www.youtube.com/oembed**', route => route.fulfill({ json: { title: result.title, author_name: result.artist } }));
-  await page.route('https://www.youtube.com/iframe_api', route => route.fulfill({ contentType: 'application/javascript', body: `window.YT={Player:class{constructor(el,opts){this.time=0;this.opts=opts;el.innerHTML='<iframe title="Lecteur vidéo YouTube simulé"></iframe>';setTimeout(()=>opts.events.onReady(),10)}loadVideoById(){this.time=0}playVideo(){this.opts.events.onStateChange({data:1})}pauseVideo(){this.opts.events.onStateChange({data:2})}setVolume(){}seekTo(t){this.time=t}getCurrentTime(){return this.time}getDuration(){return 240}destroy(){}}};window.onYouTubeIframeAPIReady?.();` }));
+  await page.route('https://www.youtube.com/iframe_api', route => route.fulfill({ contentType: 'application/javascript', body: `window.YT={Player:class{constructor(el,opts){this.time=0;this.opts=opts;window.__testYTError=(code)=>opts.events.onError({data:code});el.innerHTML='<iframe title="Lecteur vidéo YouTube simulé"></iframe>';setTimeout(()=>opts.events.onReady(),10)}loadVideoById(){this.time=0}playVideo(){this.opts.events.onStateChange({data:1})}pauseVideo(){this.opts.events.onStateChange({data:2})}setVolume(){}seekTo(t){this.time=t}getCurrentTime(){return this.time}getDuration(){return 240}destroy(){}}};window.onYouTubeIframeAPIReady?.();` }));
 }
 test.beforeEach(async ({ page }) => { await offlineAssets(page); await page.goto('/'); });
 
@@ -159,4 +159,19 @@ test('configuration saves a personal key and exposes real GitHub tools', async (
   await page.reload();
   await page.getByRole('button', { name: 'Configurer Thrum', exact: true }).click();
   await expect(page.getByLabel('Clé YouTube Data API v3', { exact: true })).toHaveValue('AIza-fake-test-key');
+});
+
+
+test('blocked video offers distinct versions and keeps YouTube available', async ({ page }) => {
+  await page.route('**/api/search?*', route => route.fulfill({ json: { items: [{ ...result, id: '4NRXx6U8ABQ' }, result] } }));
+  await page.getByRole('button', { name: 'Lancer la sélection' }).click();
+  await expect(page.getByRole('button', { name: 'Mettre en pause', exact: true })).toBeVisible();
+  await page.waitForFunction(() => '__testYTError' in window);
+  await page.evaluate(() => (window as unknown as {__testYTError:(code:number)=>void}).__testYTError(101));
+  const dialog=page.getByRole('dialog', { name: 'Trouver une autre version' });
+  await expect(dialog).toBeVisible();
+  await expect(dialog.getByRole('link', { name: /Écouter la vidéo sur YouTube/ })).toHaveAttribute('href', 'https://www.youtube.com/watch?v=4NRXx6U8ABQ');
+  await dialog.getByRole('button', { name: 'Bohemian Rhapsody Queen', exact: true }).click();
+  await expect(dialog).toHaveCount(0);
+  await expect(page.locator('.now-details h3')).toHaveText('Bohemian Rhapsody');
 });
