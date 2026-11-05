@@ -1,0 +1,5 @@
+# Optional public overrides; otherwise src/config/public.ts supplies the project.
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_PUBLISHABLE_KEY=sb_publishable_replace_with_your_public_key
+# Required for search by title; link playback needs no YouTube API key.
+YOUTUBE_API_KEY=replace_with_your_server_youtube_data_api_key

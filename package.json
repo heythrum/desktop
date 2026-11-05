@@ -1,0 +1,93 @@
+{
+  "name": "thrum",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Votre musique, votre rythme. Lecteur musical web et Windows.",
+  "type": "module",
+  "main": "electron/main.cjs",
+  "author": "Thrum",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "npm run typecheck && vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "check": "npm run build && npm test",
+    "desktop:dev": "concurrently -k -s first \"vite --host 127.0.0.1\" \"wait-on http://127.0.0.1:5173 && electron . --dev\"",
+    "desktop:build": "npm run build && electron-builder --dir --publish never",
+    "desktop:win": "npm run build && electron-builder --win nsis portable --x64 --publish never",
+    "pages:dev": "npm run build && wrangler pages dev dist --port 8788",
+    "cloudflare:dev": "npm run build && wrangler dev --port 8787",
+    "deploy:cloudflare": "npm run build && wrangler deploy",
+    "cloudflare:check": "wrangler deploy --dry-run --outdir .wrangler/check"
+  },
+  "dependencies": {
+    "@fontsource-variable/dm-sans": "5.3.0",
+    "@fontsource-variable/manrope": "5.3.0",
+    "@supabase/supabase-js": "2.119.0",
+    "lucide-react": "1.69.0",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "0.5.15",
+    "@playwright/test": "1.64.1",
+    "@testing-library/jest-dom": "6.8.0",
+    "@testing-library/react": "16.3.3",
+    "@types/node": "22.18.0",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "6.2.1",
+    "concurrently": "10.0.6",
+    "electron": "45.2.3",
+    "electron-builder": "26.18.0",
+    "jsdom": "31.0.0",
+    "typescript": "5.9.3",
+    "vite": "8.3.6",
+    "vitest": "5.1.0",
+    "wait-on": "8.0.4",
+    "wrangler": "4.158.0"
+  },
+  "build": {
+    "appId": "uno.thrum.desktop",
+    "productName": "Thrum",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "package.json"
+    ],
+    "asar": true,
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "artifactName": "Thrum-${version}-${arch}-setup.${ext}",
+      "icon": "electron/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true
+    },
+    "portable": {
+      "artifactName": "Thrum-${version}-portable.${ext}"
+    },
+    "linux": {
+      "icon": "electron/icon.png",
+      "category": "AudioVideo"
+    }
+  },
+  "overrides": {
+    "minimatch@>=7.0.0 <11.0.1": "11.0.4"
+  }
+}
