@@ -145,3 +145,18 @@ test('account sign-in requires a library choice then syncs edits', async ({ page
   await expect.poll(() => writes).toBe(2);
   expect((snapshot!.state as { favorites: string[] }).favorites).toHaveLength(1);
 });
+
+test('configuration saves a personal key and exposes real GitHub tools', async ({ page }) => {
+  await page.route('https://www.googleapis.com/youtube/v3/search?*', route => route.fulfill({ json: { items: [{ id: { videoId: TEST_ID }, snippet: { title: result.title, channelTitle: result.artist } }] } }));
+  await page.getByRole('button', { name: 'Configurer Thrum', exact: true }).click();
+  await page.getByLabel('Clé YouTube Data API v3', { exact: true }).fill('AIza-fake-test-key');
+  await page.getByRole('button', { name: 'Tester la clé', exact: true }).click();
+  await expect(page.getByRole('status')).toContainText('répond correctement');
+  await page.getByRole('button', { name: 'Enregistrer la clé', exact: true }).click();
+  await expect(page.getByRole('status')).toContainText('enregistrée');
+  await expect(page.getByRole('link', { name: 'Ouvrir le dépôt', exact: true })).toHaveAttribute('href', 'https://github.com/heythrum/desktop');
+  await page.getByRole('button', { name: 'Terminer la configuration', exact: true }).click();
+  await page.reload();
+  await page.getByRole('button', { name: 'Configurer Thrum', exact: true }).click();
+  await expect(page.getByLabel('Clé YouTube Data API v3', { exact: true })).toHaveValue('AIza-fake-test-key');
+});

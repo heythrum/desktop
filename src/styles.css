@@ -21,3 +21,4 @@
 .account-nav{display:flex;align-items:center;gap:8px;padding:9px 11px;background:#c4a6ff0d;border:1px solid #c4a6ff1c;border-radius:8px;color:#c7aee0;white-space:nowrap;font-size:10px}.account-nav:hover{background:#c4a6ff20}.account-nav>i{width:5px;height:5px;border-radius:50%;background:#e6ba85}.account-nav>i.synced{background:var(--mint)}.account-nav>i.pending{background:#e6ba85}.topbar{gap:14px}.topbar .location{font-size:7px;letter-spacing:1.1px}
 @media(max-width:1250px){.topbar .location{display:none}.topbar .search-form{margin-left:0;width:auto;flex:1}}
 @media(max-width:760px){.account-nav{padding:8px}.account-nav>span{display:none}.account-nav>i{display:none}.topbar{gap:9px}.account-nav>svg{width:17px;height:17px}}
+.sidebar{overflow-y:auto;scrollbar-width:thin;scrollbar-color:#42344e transparent}.sidebar-bottom{flex-shrink:0}.playlist-sidebar{flex-shrink:1;min-height:0}.sidebar-bottom>.settings-nav{padding-top:12px;padding-bottom:8px}

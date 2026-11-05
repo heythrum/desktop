@@ -1,3 +1,15 @@
+# Télécharger et configurer Thrum
+
+Téléchargement public : https://github.com/heythrum/desktop/releases/latest
+
+Dans Assets, choisissez `Thrum-1.0.1-x64-setup.exe` pour installer, ou `Thrum-1.0.1-portable.exe` pour lancer sans installation. Les fichiers sont publiés quand le workflow du tag a terminé avec succès. Une page Releases vide indique que la compilation est encore en cours ou a échoué ; consultez Actions.
+
+Au premier lancement Windows, **Configurer Thrum** permet de saisir, tester et enregistrer votre clé YouTube personnelle. Ce panneau reste accessible depuis la barre latérale. Il contient aussi les liens pour installer GitHub Desktop, ouvrir le dépôt, modifier la configuration publique et gérer Cloudflare.
+
+La clé personnelle ne modifie pas GitHub ni le serveur. Pour la recherche de tout le site, utilisez le secret `YOUTUBE_API_KEY` du Worker Cloudflare. GitHub Desktop gère votre connexion GitHub : clonez le dépôt, modifiez les fichiers puis faites Commit et Push. Une nouvelle version Windows se publie via un tag `v...` ; le site se reconstruit si Workers Builds est connecté.
+
+---
+
 # Tester Thrum sur Windows
 
 La version Windows utilise le même lecteur et les mêmes comptes Supabase que le site dans une application Electron. Elle nécessite Internet pour lire YouTube. Elle ne télécharge pas de morceaux et ne contourne pas les restrictions de YouTube.

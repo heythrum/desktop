@@ -5,7 +5,7 @@ const path = require('node:path');
 
 const devMode = !app.isPackaged && process.argv.includes('--dev');
 let localServer;
-const allowedExternalHosts = new Set(['www.youtube.com', 'youtube.com', 'youtu.be', 'console.cloud.google.com', 'developers.google.com', 'docs.netlify.com', 'github.com', 'thrum.uno', 'open.spotify.com']);
+const allowedExternalHosts = new Set(['www.youtube.com', 'youtube.com', 'youtu.be', 'console.cloud.google.com', 'developers.google.com', 'docs.netlify.com', 'github.com', 'thrum.uno', 'open.spotify.com', 'desktop.github.com', 'dash.cloudflare.com']);
 const policy = "default-src 'self'; script-src 'self' https://www.youtube.com https://s.ytimg.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://i.ytimg.com https://img.youtube.com; font-src 'self' data:; connect-src 'self' https://www.googleapis.com https://www.youtube.com https://*.supabase.co wss://*.supabase.co https://thrum.uno; frame-src https://www.youtube.com https://www.youtube-nocookie.com https://open.spotify.com; media-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'";
 
 function openExternal(raw) {
