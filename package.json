@@ -1,6 +1,6 @@
 {
   "name": "thrum",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "private": true,
   "description": "Votre musique, votre rythme. Lecteur musical web et Windows.",
   "type": "module",

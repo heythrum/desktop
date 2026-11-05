@@ -4,7 +4,7 @@ La version 1.0.2 ajoute la recherche de versions alternatives lors des erreurs Y
 
 Téléchargement public : https://github.com/heythrum/desktop/releases/latest
 
-Dans Assets, choisissez `Thrum-1.0.2-x64-setup.exe` pour installer, ou `Thrum-1.0.2-portable.exe` pour lancer sans installation. Les fichiers sont publiés quand le workflow du tag a terminé avec succès. Une page Releases vide indique que la compilation est encore en cours ou a échoué ; consultez Actions.
+Dans Assets, choisissez `Thrum-1.0.3-x64-setup.exe` pour installer, ou `Thrum-1.0.3-portable.exe` pour lancer sans installation. Les fichiers sont publiés quand le workflow du tag a terminé avec succès. Une page Releases vide indique que la compilation est encore en cours ou a échoué ; consultez Actions.
 
 Au premier lancement Windows, **Configurer Thrum** permet de saisir, tester et enregistrer votre clé YouTube personnelle. Ce panneau reste accessible depuis la barre latérale. Il contient aussi les liens pour installer GitHub Desktop, ouvrir le dépôt, modifier la configuration publique et gérer Cloudflare.
 

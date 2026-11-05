@@ -19,6 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       ELECTRON_SKIP_BINARY_DOWNLOAD: '1'
+      PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH: /usr/bin/google-chrome
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -27,8 +28,10 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run check
-      - name: Install Chromium for browser checks
-        run: npx --no-install playwright install --with-deps chromium
+      - name: Use Chrome provided by the GitHub Ubuntu runner
+        run: |
+          test -x "$PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH"
+          "$PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH" --version
       - name: Test desktop and mobile interfaces
         run: npm run test:e2e
       - uses: actions/upload-artifact@v4
